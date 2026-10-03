@@ -209,7 +209,9 @@ footer{
   .stats{grid-template-columns:1fr}
 }
 </style>
+  <Dscript src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+  
 
 <body>
 
@@ -332,7 +334,7 @@ footer{
       <input placeholder="Seu nome">
     </div>
 
-    <button class="btn btn-red full" onclick="demoLogin()">Continuar</button>
+    <button class="btn btn-red full" onclick="authSubmit()">Continuar</button>
 
     <div class="notice">
       Demonstração visual. Para contas reais, o site precisará ser conectado a um serviço seguro de autenticação.
@@ -536,13 +538,66 @@ function openOrders(){
   openModal("ordersModal");
 }
 
+let authMode = "login";
+
 function authTab(type){
-  document.getElementById("loginTab").classList.toggle("active",type==="login");
-  document.getElementById("createTab").classList.toggle("active",type==="create");
-  document.getElementById("nameField").style.display=type==="create"?"block":"none";
+    authMode = type;
+
+    document.getElementById("loginTab").classList.toggle("active", type === "login");
+    document.getElementById("createTab").classList.toggle("active", type === "create");
+    document.getElementById("nameField").style.display = type === "create" ? "block" : "none";
 }
 
-function demoLogin(){
+async function authSubmit(){
+    if(authMode === "login"){
+        await demoLogin();
+        return;
+    }
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if(!email || !password){
+        toast("Digite seu e-mail e senha.");
+        return;
+    }
+
+    const { data, error } = await rocketSupabase.auth.signUp({
+        email: email,
+        password: password
+    });
+
+    if(error){
+        toast("Erro ao criar conta: " + error.message);
+        return;
+    }
+
+    toast("Conta criada! Confira seu e-mail para confirmar o cadastro.");
+    closeModal("loginModal");
+}
+
+async function demoLogin(){
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if(!email || !password){
+        toast("Digite seu e-mail e senha.");
+        return;
+    }
+
+    const { data, error } = await rocketSupabase.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    if(error){
+        toast("E-mail ou senha incorretos.");
+        return;
+    }
+
+    toast("Login realizado com sucesso!");
+    closeModal("loginModal");
+}
   toast("Login demonstrativo. A autenticação real será conectada depois.");
   closeModal("loginModal");
 }
