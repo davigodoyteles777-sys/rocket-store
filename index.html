@@ -1,965 +1,466 @@
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#070707;--card:#111113;--card2:#17171a;--red:#ff1830;
-  --red2:#b90018;--text:#fff;--muted:#96969f;--border:#29292e;
-  --green:#28d17c
-}
-body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-a{text-decoration:none;color:inherit}
-.hidden{display:none!important}
-
-header{
-  position:sticky;top:0;z-index:50;background:rgba(7,7,7,.94);
-  backdrop-filter:blur(18px);border-bottom:1px solid var(--border)
-}
-.nav{
-  max-width:1250px;margin:auto;height:72px;padding:0 22px;
-  display:flex;align-items:center;gap:28px
-}
-.logo{font-size:21px;font-weight:900;white-space:nowrap}
-.logo b{color:var(--red)}
-nav{display:flex;gap:22px;flex:1}
-nav a{color:#aaa;font-size:14px}
-nav a:hover{color:#fff}
-.actions{display:flex;gap:10px;align-items:center}
-.btn{
-  border:1px solid var(--border);background:#171719;color:#fff;
-  padding:11px 17px;border-radius:10px;font-weight:700
-}
-.btn:hover{filter:brightness(1.18)}
-.btn-red{background:var(--red);border-color:var(--red)}
-.btn-ghost{background:transparent}
-.btn-full{width:100%}
-.badge{
-  background:var(--red);border-radius:30px;padding:2px 7px;
-  font-size:11px;margin-left:5px
-}
-
-.hero{
-  max-width:1250px;margin:auto;padding:80px 22px 55px;
-  display:grid;grid-template-columns:1.25fr .75fr;gap:50px;align-items:center
-}
-.hero small{color:var(--red);font-weight:900;letter-spacing:2px}
-.hero h1{font-size:64px;line-height:.98;margin:14px 0 22px;max-width:760px}
-.hero p{color:#aaa;font-size:18px;line-height:1.6;max-width:650px}
-.hero-buttons{display:flex;gap:12px;margin-top:28px}
-.hero-card{
-  min-height:330px;border:1px solid #302126;border-radius:25px;
-  background:radial-gradient(circle at 60% 35%,#5d0714,#160509 40%,#0c0c0e 72%);
-  padding:35px;display:flex;flex-direction:column;justify-content:flex-end
-}
-.hero-card .rocket{font-size:70px;margin-bottom:auto}
-.hero-card h2{font-size:30px}
-.hero-card p{font-size:14px;margin-top:8px}
-
-.stats{
-  max-width:1206px;margin:0 auto 65px;border:1px solid var(--border);
-  border-radius:18px;display:grid;grid-template-columns:repeat(4,1fr);
-  background:#0d0d0f
-}
-.stat{padding:25px;text-align:center;border-right:1px solid var(--border)}
-.stat:last-child{border:0}
-.stat strong{display:block;font-size:25px}
-.stat span{color:#888;font-size:12px}
-
-section{max-width:1250px;margin:auto;padding:40px 22px}
-.section-title{display:flex;justify-content:space-between;align-items:end;margin-bottom:24px}
-.section-title h2{font-size:31px}
-.section-title p{color:#888;margin-top:7px}
-
-.toolbar{display:flex;gap:10px;margin-bottom:25px;flex-wrap:wrap}
-.search{
-  flex:1;min-width:240px;background:#111;border:1px solid var(--border);
-  color:#fff;padding:14px 16px;border-radius:11px;outline:none
-}
-.filter{
-  background:#111;color:#fff;border:1px solid var(--border);
-  border-radius:11px;padding:0 15px
-}
-
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.product{
-  background:var(--card);border:1px solid var(--border);border-radius:17px;
-  overflow:hidden;transition:.2s
-}
-.product:hover{transform:translateY(-4px);border-color:#4a4a50}
-.product-image{
-  height:155px;background:linear-gradient(135deg,#251014,#090909);
-  display:flex;align-items:center;justify-content:center;font-size:60px;
-  border-bottom:1px solid var(--border)
-}
-.product-body{padding:20px}
-.tag{
-  display:inline-block;color:#ff8290;background:#321018;padding:5px 8px;
-  border-radius:7px;font-size:10px;font-weight:900;margin-bottom:10px
-}
-.product h3{font-size:18px;margin-bottom:7px}
-.product p{color:#888;font-size:13px;line-height:1.5;min-height:40px}
-.price-row{display:flex;justify-content:space-between;align-items:center;margin-top:18px}
-.price{font-size:23px;font-weight:900}
-.price small{font-size:11px;color:#777;display:block;font-weight:400}
-
-.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
-.feature{
-  padding:25px;background:#101012;border:1px solid var(--border);
-  border-radius:15px
-}
-.feature .icon{font-size:28px;margin-bottom:15px}
-.feature h3{margin-bottom:8px}
-.feature p{color:#888;font-size:13px;line-height:1.6}
-
-footer{
-  border-top:1px solid var(--border);margin-top:60px;
-  padding:40px 22px;color:#777;text-align:center;font-size:13px
-}
-
-/* MODAL */
-.overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.76);z-index:100;
-  display:none;align-items:center;justify-content:center;padding:20px
-}
-.overlay.show{display:flex}
-.modal{
-  background:#111113;border:1px solid #333;border-radius:18px;
-  width:min(480px,100%);max-height:90vh;overflow:auto;padding:25px
-}
-.modal.wide{width:min(700px,100%)}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
-.modal-head h2{font-size:23px}
-.x{border:0;background:none;color:#aaa;font-size:24px}
-.tabs{display:grid;grid-template-columns:1fr 1fr;background:#090909;padding:4px;border-radius:10px;margin-bottom:18px}
-.tab{border:0;background:none;color:#888;padding:11px;border-radius:8px}
-.tab.active{background:#222;color:#fff}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:12px;color:#aaa;margin-bottom:7px}
-.field input,.field textarea{
-  width:100%;padding:13px;background:#090909;border:1px solid #303034;
-  color:#fff;border-radius:9px;outline:none
-}
-.field textarea{min-height:100px;resize:vertical}
-.help{color:#777;font-size:11px;margin-top:12px;line-height:1.5}
-
-.cart-item,.order{
-  padding:14px;background:#18181b;border:1px solid var(--border);
-  border-radius:11px;margin-bottom:10px
-}
-.cart-top,.order-top{display:flex;justify-content:space-between;gap:15px}
-.cart-item p,.order p{color:#888;font-size:12px;margin-top:5px}
-.remove{background:none;border:0;color:#ff6475}
-.total{
-  display:flex;justify-content:space-between;font-size:21px;font-weight:900;
-  padding:20px 0;border-top:1px solid var(--border);margin-top:15px
-}
-
-.account-box{
-  padding:17px;background:#18181b;border:1px solid var(--border);
-  border-radius:12px;margin-bottom:15px
-}
-.account-box p{color:#aaa;font-size:13px;margin-top:6px}
-
-.toast{
-  position:fixed;right:20px;bottom:20px;z-index:999;background:#18181b;
-  border:1px solid #3a3a40;border-radius:10px;padding:14px 18px;
-  max-width:340px;transform:translateY(120px);opacity:0;transition:.25s
-}
-.toast.show{transform:none;opacity:1}
-
-@media(max-width:900px){
-  nav{display:none}.hero{grid-template-columns:1fr;padding-top:55px}
-  .hero h1{font-size:47px}.grid{grid-template-columns:repeat(2,1fr)}
-  .feature-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:560px){
-  .nav{padding:0 13px}.logo{font-size:17px}.actions .btn-ghost{display:none}
-  .hero h1{font-size:39px}.hero-card{min-height:250px}
-  .grid{grid-template-columns:1fr}.stats{margin:0 13px 35px}
-  .stat{padding:18px 8px}.hero-buttons{flex-direction:column}
-}
-</style>
-</head>
-
-<body>
-
-<header>
-<div class="nav">
-  <a class="logo" href="#">🚀 ROCKET <b>STORE</b></a>
-
-  <nav>
-    <a href="#">Início</a>
-    <a href="#explorar">Explorar</a>
-    <a href="#seguranca">Segurança</a>
-    <a href="#" onclick="openSupport()">Suporte</a>
-  </nav>
-
-  <div class="actions">
-    <button class="btn btn-ghost" onclick="openOrders()">Meus pedidos</button>
-    <button class="btn" id="accountBtn" onclick="openAuth()">Entrar</button>
-    <button class="btn btn-red" onclick="openCart()">🛒 <span id="cartCount">0</span></button>
-  </div>
-</div>
-</header>
-
-<main>
-
-<div class="hero">
-  <div>
-    <small>MARKETPLACE GAMER</small>
-    <h1>Seu próximo nível começa aqui.</h1>
-    <p>Produtos digitais selecionados, experiência rápida, área do cliente e suporte em um só lugar.</p>
-
-    <div class="hero-buttons">
-      <button class="btn btn-red" onclick="document.getElementById('explorar').scrollIntoView()">Explorar produtos</button>
-      <button class="btn" onclick="openSupport()">Central de suporte</button>
-    </div>
-  </div>
-
-  <div class="hero-card">
-    <div class="rocket">🚀</div>
-    <h2>Rocket Store</h2>
-    <p>Marketplace gamer com experiência simples, rápida e segura.</p>
-  </div>
-</div>
-
-<div class="stats">
-  <div class="stat"><strong>24/7</strong><span>Loja disponível</span></div>
-  <div class="stat"><strong>100%</strong><span>Digital</span></div>
-  <div class="stat"><strong>SSL</strong><span>Conexão segura</span></div>
-  <div class="stat"><strong>Suporte</strong><span>Via Discord</span></div>
-</div>
-
-<section id="explorar">
-  <div class="section-title">
-    <div>
-      <h2>Explorar produtos</h2>
-      <p>Encontre produtos para seus jogos favoritos.</p>
-    </div>
-  </div>
-
-  <div class="toolbar">
-    <input class="search" id="search" placeholder="Pesquisar produto..." oninput="renderProducts()">
-    <select class="filter" id="category" onchange="renderProducts()">
-      <option value="all">Todas as categorias</option>
-      <option value="Blox Fruits">Blox Fruits</option>
-      <option value="Roblox">Roblox</option>
-      <option value="Stumble Guys">Stumble Guys</option>
-      <option value="Minecraft">Minecraft</option>
-    </select>
-  </div>
-
-  <div class="grid" id="productGrid"></div>
-</section>
-
-<section id="seguranca">
-  <div class="section-title">
-    <div>
-      <h2>Experiência Rocket</h2>
-      <p>Recursos para facilitar suas compras.</p>
-    </div>
-  </div>
-
-  <div class="feature-grid">
-    <div class="feature">
-      <div class="icon">👤</div>
-      <h3>Conta do cliente</h3>
-      <p>Cadastro, login e sessão autenticada através do Supabase.</p>
-    </div>
-
-    <div class="feature">
-      <div class="icon">📦</div>
-      <h3>Meus pedidos</h3>
-      <p>Acompanhe os pedidos criados neste dispositivo enquanto finalizamos a integração do banco.</p>
-    </div>
-
-    <div class="feature">
-      <div class="icon">🎧</div>
-      <h3>Suporte</h3>
-      <p>Abra a central de atendimento e continue o contato pelo Discord oficial.</p>
-    </div>
-  </div>
-</section>
-
-</main>
-
-<footer>
-🚀 Rocket Store • Marketplace Gamer<br><br>
-© 2026 Rocket Store. Todos os direitos reservados.
-</footer>
-
-<!-- LOGIN -->
-<div class="overlay" id="authModal">
-<div class="modal">
-  <div class="modal-head">
-    <h2 id="authTitle">Sua conta</h2>
-    <button class="x" onclick="closeModal('authModal')">×</button>
-  </div>
-
-  <div class="tabs">
-    <button id="loginTab" class="tab active" onclick="setAuthMode('login')">Entrar</button>
-    <button id="registerTab" class="tab" onclick="setAuthMode('register')">Criar conta</button>
-  </div>
-
-  <div class="field hidden" id="nameField">
-    <label>Nome</label>
-    <input id="authName" placeholder="Seu nome">
-  </div>
-
-  <div class="field">
-    <label>E-mail</label>
-    <input id="authEmail" type="email" placeholder="voce@email.com">
-  </div>
-
-  <div class="field">
-    <label>Senha</label>
-    <input id="authPassword" type="password" placeholder="Sua senha">
-  </div>
-
-  <button class="btn btn-red btn-full" id="authSubmitBtn" onclick="submitAuth()">Entrar</button>
-
-  <p class="help">Ao criar uma conta, poderá ser necessário confirmar seu endereço de e-mail.</p>
-</div>
-</div>
-
-<!-- ACCOUNT -->
-<div class="overlay" id="accountModal">
-<div class="modal">
-  <div class="modal-head">
-    <h2>Minha conta</h2>
-    <button class="x" onclick="closeModal('accountModal')">×</button>
-  </div>
-
-  <div class="account-box">
-    <strong id="accountName">Cliente Rocket</strong>
-    <p id="accountEmail"></p>
-  </div>
-
-  <button class="btn btn-full" onclick="openOrders();closeModal('accountModal')">📦 Meus pedidos</button>
-  <br><br>
-  <button class="btn btn-full" onclick="openSupport();closeModal('accountModal')">🎧 Suporte</button>
-  <br><br>
-  <button class="btn btn-full" onclick="openRefund();closeModal('accountModal')">↩ Solicitar reembolso</button>
-  <br><br>
-  <button class="btn btn-red btn-full" onclick="logout()">Sair da conta</button>
-</div>
-</div>
-
-<!-- CART -->
-<div class="overlay" id="cartModal">
-<div class="modal wide">
-  <div class="modal-head">
-    <h2>Seu carrinho</h2>
-    <button class="x" onclick="closeModal('cartModal')">×</button>
-  </div>
-
-  <div id="cartItems"></div>
-
-  <div class="total">
-    <span>Total</span>
-    <span id="cartTotal">R$ 0,00</span>
-  </div>
-
-  <button class="btn btn-red btn-full" onclick="checkout()">Continuar para checkout</button>
-</div>
-</div>
-
-<!-- CHECKOUT -->
-<div class="overlay" id="checkoutModal">
-<div class="modal">
-  <div class="modal-head">
-    <h2>Finalizar compra</h2>
-    <button class="x" onclick="closeModal('checkoutModal')">×</button>
-  </div>
-
-  <div class="field">
-    <label>Nome do comprador</label>
-    <input id="checkoutName" placeholder="Seu nome">
-  </div>
-
-  <div class="field">
-    <label>E-mail para entrega</label>
-    <input id="checkoutEmail" type="email" placeholder="voce@email.com">
-  </div>
-
-  <div class="account-box">
-    <strong>Resumo da compra</strong>
-    <p id="checkoutSummary"></p>
-  </div>
-
-  <button class="btn btn-red btn-full" onclick="createOrder()">Criar pedido</button>
-
-  <p class="help">
-    O pedido será criado como “Aguardando pagamento”. O PIX automático será conectado
-    separadamente através de um backend seguro.
-  </p>
-</div>
-</div>
-
-<!-- ORDERS -->
-<div class="overlay" id="ordersModal">
-<div class="modal wide">
-  <div class="modal-head">
-    <h2>Meus pedidos</h2>
-    <button class="x" onclick="closeModal('ordersModal')">×</button>
-  </div>
-  <div id="ordersList"></div>
-</div>
-</div>
-
-<!-- SUPPORT -->
-<div class="overlay" id="supportModal">
-<div class="modal">
-  <div class="modal-head">
-    <h2>Central de suporte</h2>
-    <button class="x" onclick="closeModal('supportModal')">×</button>
-  </div>
-
-  <div class="field">
-    <label>Assunto</label>
-    <input id="supportSubject" placeholder="Como podemos ajudar?">
-  </div>
-
-  <div class="field">
-    <label>Mensagem</label>
-    <textarea id="supportMessage" placeholder="Explique sua dúvida..."></textarea>
-  </div>
-
-  <button class="btn btn-red btn-full" onclick="sendSupport()">Continuar atendimento</button>
-
-  <p class="help">Você será direcionado ao Discord oficial da Rocket Store para continuar o atendimento.</p>
-</div>
-</div>
-
-<!-- REFUND -->
-<div class="overlay" id="refundModal">
-<div class="modal">
-  <div class="modal-head">
-    <h2>Solicitar reembolso</h2>
-    <button class="x" onclick="closeModal('refundModal')">×</button>
-  </div>
-
-  <div class="field">
-    <label>Número do pedido</label>
-    <input id="refundOrder" placeholder="Ex: RS123456">
-  </div>
-
-  <div class="field">
-    <label>Motivo</label>
-    <textarea id="refundReason" placeholder="Explique o motivo da solicitação"></textarea>
-  </div>
-
-  <button class="btn btn-red btn-full" onclick="requestRefund()">Enviar solicitação</button>
-
-  <p class="help">O envio da solicitação não significa aprovação automática do reembolso.</p>
-</div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-/* ==============================
-   SUPABASE
-================================ */
-
-const SUPABASE_URL = "https://exjotxdqagkwqdxqlzr.supabase.co";
-const SUPABASE_KEY = "sb_publishable_P6AiLstOzntpF5Qp0f4oKQ_hUvzcZVm";
-
-const rocketSupabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+-- ============================================================
+-- ROCKET STORE - BANCO DE DADOS
+-- Supabase / PostgreSQL
+-- ============================================================
+
+-- EXTENSÃO PARA UUID
+create extension if not exists pgcrypto;
+
+-- ============================================================
+-- 1. PERFIS
+-- ============================================================
+
+create table if not exists public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  name text,
+  username text unique,
+  avatar_url text,
+  role text not null default 'buyer'
+    check (role in ('buyer', 'seller', 'admin')),
+  seller_verified boolean not null default false,
+  created_at timestamptz not null default now()
 );
 
-/* ==============================
-   PRODUTOS
-================================ */
+-- ============================================================
+-- 2. PRODUTOS / ANÚNCIOS
+-- ============================================================
 
-const products = [
-  {
-    id:1,
-    name:"Conta Blox Fruits Premium",
-    game:"Blox Fruits",
-    description:"Conta avançada para jogadores que querem evoluir mais rápido.",
-    price:59.90,
-    icon:"🍈"
-  },
-  {
-    id:2,
-    name:"Conta Blox Fruits Elite",
-    game:"Blox Fruits",
-    description:"Conta com progressão avançada e recursos selecionados.",
-    price:89.90,
-    icon:"⚔️"
-  },
-  {
-    id:3,
-    name:"Conta Roblox Gamer",
-    game:"Roblox",
-    description:"Conta preparada para começar sua experiência no Roblox.",
-    price:39.90,
-    icon:"🎮"
-  },
-  {
-    id:4,
-    name:"Conta Stumble Guys Pro",
-    game:"Stumble Guys",
-    description:"Conta gamer para fãs de Stumble Guys.",
-    price:44.90,
-    icon:"🏆"
-  },
-  {
-    id:5,
-    name:"Conta Minecraft Premium",
-    game:"Minecraft",
-    description:"Produto digital para jogadores de Minecraft.",
-    price:69.90,
-    icon:"⛏️"
-  },
-  {
-    id:6,
-    name:"Pack Gamer Rocket",
-    game:"Roblox",
-    description:"Seleção especial de conteúdo digital Rocket Store.",
-    price:29.90,
-    icon:"🚀"
-  }
-];
+create table if not exists public.products (
+  id uuid primary key default gen_random_uuid(),
 
-let cart = JSON.parse(localStorage.getItem("rocketCart") || "[]");
-let authMode = "login";
-let currentUser = null;
+  seller_id uuid not null
+    references public.profiles(id)
+    on delete cascade,
 
-function money(value){
-  return value.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-}
+  game text not null,
+  category text not null,
+  title text not null,
+  description text,
 
-function renderProducts(){
-  const search = document.getElementById("search").value.toLowerCase();
-  const category = document.getElementById("category").value;
+  price numeric(10,2) not null
+    check (price >= 0),
 
-  const filtered = products.filter(p=>{
-    const matchesSearch =
-      p.name.toLowerCase().includes(search) ||
-      p.game.toLowerCase().includes(search);
+  stock integer not null default 1
+    check (stock >= 0),
 
-    const matchesCategory = category==="all" || p.game===category;
+  image_url text,
 
-    return matchesSearch && matchesCategory;
-  });
+  delivery_type text not null default 'manual'
+    check (delivery_type in ('manual','automatic')),
 
-  document.getElementById("productGrid").innerHTML = filtered.map(p=>`
-    <article class="product">
-      <div class="product-image">${p.icon}</div>
-      <div class="product-body">
-        <span class="tag">${p.game.toUpperCase()}</span>
-        <h3>${p.name}</h3>
-        <p>${p.description}</p>
+  status text not null default 'active'
+    check (status in ('active','paused','sold','removed')),
 
-        <div class="price-row">
-          <div class="price">
-            ${money(p.price)}
-            <small>pagamento único</small>
-          </div>
+  created_at timestamptz not null default now()
+);
 
-          <button class="btn btn-red" onclick="addToCart(${p.id})">
-            Adicionar
-          </button>
-        </div>
-      </div>
-    </article>
-  `).join("");
-}
+-- ============================================================
+-- 3. FAVORITOS
+-- ============================================================
 
-/* ==============================
-   CARRINHO
-================================ */
+create table if not exists public.favorites (
+  id uuid primary key default gen_random_uuid(),
 
-function addToCart(id){
-  const product = products.find(p=>p.id===id);
-  cart.push(product);
-  saveCart();
-  toast("Produto adicionado ao carrinho.");
-}
+  user_id uuid not null
+    references public.profiles(id)
+    on delete cascade,
 
-function removeFromCart(index){
-  cart.splice(index,1);
-  saveCart();
-  renderCart();
-}
+  product_id uuid not null
+    references public.products(id)
+    on delete cascade,
 
-function saveCart(){
-  localStorage.setItem("rocketCart",JSON.stringify(cart));
-  document.getElementById("cartCount").textContent = cart.length;
-}
+  created_at timestamptz not null default now(),
 
-function cartTotal(){
-  return cart.reduce((sum,p)=>sum+p.price,0);
-}
+  unique(user_id, product_id)
+);
 
-function openCart(){
-  renderCart();
-  openModal("cartModal");
-}
+-- ============================================================
+-- 4. PEDIDOS
+-- ============================================================
 
-function renderCart(){
-  const box=document.getElementById("cartItems");
+create table if not exists public.orders (
+  id uuid primary key default gen_random_uuid(),
 
-  if(!cart.length){
-    box.innerHTML=`<div class="account-box"><p>Seu carrinho está vazio.</p></div>`;
-  }else{
-    box.innerHTML=cart.map((p,i)=>`
-      <div class="cart-item">
-        <div class="cart-top">
-          <div>
-            <strong>${p.name}</strong>
-            <p>${p.game}</p>
-          </div>
-          <div>
-            <strong>${money(p.price)}</strong>
-            <button class="remove" onclick="removeFromCart(${i})">Remover</button>
-          </div>
-        </div>
-      </div>
-    `).join("");
-  }
+  buyer_id uuid not null
+    references public.profiles(id),
 
-  document.getElementById("cartTotal").textContent=money(cartTotal());
-}
+  total numeric(10,2) not null
+    check (total >= 0),
 
-/* ==============================
-   CHECKOUT
-================================ */
+  status text not null default 'pending'
+    check (
+      status in (
+        'pending',
+        'paid',
+        'processing',
+        'delivered',
+        'cancelled',
+        'refunded'
+      )
+    ),
 
-function checkout(){
-  if(!cart.length){
-    toast("Seu carrinho está vazio.");
-    return;
-  }
+  payment_method text,
 
-  closeModal("cartModal");
+  payment_reference text,
 
-  document.getElementById("checkoutSummary").textContent =
-    `${cart.length} produto(s) • Total ${money(cartTotal())}`;
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
 
-  if(currentUser){
-    document.getElementById("checkoutEmail").value=currentUser.email || "";
-    document.getElementById("checkoutName").value=
-      currentUser.user_metadata?.name || "";
-  }
+-- ============================================================
+-- 5. ITENS DO PEDIDO
+-- ============================================================
 
-  openModal("checkoutModal");
-}
+create table if not exists public.order_items (
+  id uuid primary key default gen_random_uuid(),
 
-function createOrder(){
-  const name=document.getElementById("checkoutName").value.trim();
-  const email=document.getElementById("checkoutEmail").value.trim();
+  order_id uuid not null
+    references public.orders(id)
+    on delete cascade,
 
-  if(!name || !email){
-    toast("Preencha seu nome e e-mail.");
-    return;
-  }
+  product_id uuid
+    references public.products(id),
 
-  const orders=JSON.parse(localStorage.getItem("rocketOrders") || "[]");
+  seller_id uuid not null
+    references public.profiles(id),
 
-  const order={
-    number:"RS"+Date.now().toString().slice(-7),
+  product_title text not null,
+
+  quantity integer not null default 1
+    check (quantity > 0),
+
+  unit_price numeric(10,2) not null
+    check (unit_price >= 0),
+
+  created_at timestamptz not null default now()
+);
+
+-- ============================================================
+-- 6. TICKETS DE SUPORTE
+-- ============================================================
+
+create table if not exists public.support_tickets (
+  id uuid primary key default gen_random_uuid(),
+
+  user_id uuid not null
+    references public.profiles(id)
+    on delete cascade,
+
+  subject text not null,
+  message text not null,
+
+  status text not null default 'open'
+    check (status in ('open','in_progress','closed')),
+
+  created_at timestamptz not null default now()
+);
+
+-- ============================================================
+-- 7. REEMBOLSOS
+-- ============================================================
+
+create table if not exists public.refund_requests (
+  id uuid primary key default gen_random_uuid(),
+
+  user_id uuid not null
+    references public.profiles(id),
+
+  order_id uuid not null
+    references public.orders(id),
+
+  reason text not null,
+
+  status text not null default 'requested'
+    check (
+      status in (
+        'requested',
+        'reviewing',
+        'approved',
+        'rejected',
+        'completed'
+      )
+    ),
+
+  created_at timestamptz not null default now()
+);
+
+-- ============================================================
+-- CRIAR PERFIL AUTOMATICAMENTE QUANDO USUÁRIO SE CADASTRAR
+-- ============================================================
+
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+
+  insert into public.profiles (
+    id,
     name,
-    email,
-    products:cart.map(p=>p.name),
-    total:cartTotal(),
-    status:"Aguardando pagamento",
-    date:new Date().toLocaleString("pt-BR")
-  };
+    role
+  )
+  values (
+    new.id,
+    coalesce(
+      new.raw_user_meta_data ->> 'name',
+      'Cliente Rocket'
+    ),
+    'buyer'
+  )
+  on conflict (id) do nothing;
 
-  orders.unshift(order);
-  localStorage.setItem("rocketOrders",JSON.stringify(orders));
+  return new;
 
-  cart=[];
-  saveCart();
+end;
+$$;
 
-  closeModal("checkoutModal");
-  toast(`Pedido ${order.number} criado.`);
+drop trigger if exists on_auth_user_created on auth.users;
 
-  setTimeout(()=>{
-    openOrders();
-  },500);
-}
+create trigger on_auth_user_created
+after insert on auth.users
+for each row
+execute function public.handle_new_user();
 
-/* ==============================
-   LOGIN / CADASTRO REAL
-================================ */
+-- ============================================================
+-- ATIVAR ROW LEVEL SECURITY
+-- ============================================================
 
-function openAuth(){
-  if(currentUser){
-    openAccount();
-    return;
-  }
+alter table public.profiles enable row level security;
+alter table public.products enable row level security;
+alter table public.favorites enable row level security;
+alter table public.orders enable row level security;
+alter table public.order_items enable row level security;
+alter table public.support_tickets enable row level security;
+alter table public.refund_requests enable row level security;
 
-  setAuthMode("login");
-  openModal("authModal");
-}
+-- ============================================================
+-- APAGAR POLICIES ANTIGAS COM MESMO NOME
+-- ============================================================
 
-function setAuthMode(mode){
-  authMode=mode;
+drop policy if exists "profiles_public_read" on public.profiles;
+drop policy if exists "profile_update_own" on public.profiles;
 
-  document.getElementById("loginTab")
-    .classList.toggle("active",mode==="login");
+drop policy if exists "products_public_read" on public.products;
+drop policy if exists "seller_create_product" on public.products;
+drop policy if exists "seller_update_product" on public.products;
+drop policy if exists "seller_delete_product" on public.products;
 
-  document.getElementById("registerTab")
-    .classList.toggle("active",mode==="register");
+drop policy if exists "favorites_own_read" on public.favorites;
+drop policy if exists "favorites_own_insert" on public.favorites;
+drop policy if exists "favorites_own_delete" on public.favorites;
 
-  document.getElementById("nameField")
-    .classList.toggle("hidden",mode!=="register");
+drop policy if exists "orders_buyer_read" on public.orders;
+drop policy if exists "orders_buyer_insert" on public.orders;
 
-  document.getElementById("authSubmitBtn").textContent =
-    mode==="login" ? "Entrar" : "Criar minha conta";
-}
+drop policy if exists "order_items_buyer_read" on public.order_items;
+drop policy if exists "order_items_seller_read" on public.order_items;
 
-async function submitAuth(){
-  const email=document.getElementById("authEmail").value.trim();
-  const password=document.getElementById("authPassword").value;
-  const name=document.getElementById("authName").value.trim();
+drop policy if exists "tickets_own_read" on public.support_tickets;
+drop policy if exists "tickets_own_insert" on public.support_tickets;
 
-  if(!email || !password){
-    toast("Preencha e-mail e senha.");
-    return;
-  }
+drop policy if exists "refund_own_read" on public.refund_requests;
+drop policy if exists "refund_own_insert" on public.refund_requests;
 
-  if(password.length<6){
-    toast("A senha precisa ter pelo menos 6 caracteres.");
-    return;
-  }
+-- ============================================================
+-- PROFILES
+-- ============================================================
 
-  try{
-    if(authMode==="register"){
+create policy "profiles_public_read"
+on public.profiles
+for select
+using (true);
 
-      if(!name){
-        toast("Digite seu nome.");
-        return;
-      }
+create policy "profile_update_own"
+on public.profiles
+for update
+using (auth.uid() = id)
+with check (auth.uid() = id);
 
-      const {data,error}=await rocketSupabase.auth.signUp({
-        email,
-        password,
-        options:{
-          data:{name},
-          emailRedirectTo:window.location.origin + window.location.pathname
-        }
-      });
+-- ============================================================
+-- PRODUTOS
+-- Qualquer pessoa pode visualizar anúncios ativos.
+-- ============================================================
 
-      if(error) throw error;
+create policy "products_public_read"
+on public.products
+for select
+using (
+  status = 'active'
+  or seller_id = auth.uid()
+);
 
-      if(data.session){
-        currentUser=data.user;
-        updateAccountUI();
-        closeModal("authModal");
-        toast("Conta criada e conectada!");
-      }else{
-        closeModal("authModal");
-        toast("Conta criada. Confira seu e-mail para confirmar o cadastro.");
-      }
+create policy "seller_create_product"
+on public.products
+for insert
+to authenticated
+with check (
+  auth.uid() = seller_id
+);
 
-    }else{
+create policy "seller_update_product"
+on public.products
+for update
+to authenticated
+using (
+  auth.uid() = seller_id
+)
+with check (
+  auth.uid() = seller_id
+);
 
-      const {data,error}=await rocketSupabase.auth.signInWithPassword({
-        email,
-        password
-      });
+create policy "seller_delete_product"
+on public.products
+for delete
+to authenticated
+using (
+  auth.uid() = seller_id
+);
 
-      if(error) throw error;
+-- ============================================================
+-- FAVORITOS
+-- ============================================================
 
-      currentUser=data.user;
-      updateAccountUI();
-      closeModal("authModal");
-      toast("Login realizado com sucesso!");
-    }
+create policy "favorites_own_read"
+on public.favorites
+for select
+to authenticated
+using (
+  auth.uid() = user_id
+);
 
-  }catch(error){
-    console.error(error);
-    toast(error.message || "Não foi possível concluir a operação.");
-  }
-}
+create policy "favorites_own_insert"
+on public.favorites
+for insert
+to authenticated
+with check (
+  auth.uid() = user_id
+);
 
-async function logout(){
-  const {error}=await rocketSupabase.auth.signOut();
+create policy "favorites_own_delete"
+on public.favorites
+for delete
+to authenticated
+using (
+  auth.uid() = user_id
+);
 
-  if(error){
-    toast("Não foi possível sair da conta.");
-    return;
-  }
+-- ============================================================
+-- PEDIDOS
+-- ============================================================
 
-  currentUser=null;
-  updateAccountUI();
-  closeModal("accountModal");
-  toast("Você saiu da sua conta.");
-}
+create policy "orders_buyer_read"
+on public.orders
+for select
+to authenticated
+using (
+  auth.uid() = buyer_id
+);
 
-function updateAccountUI(){
-  const button=document.getElementById("accountBtn");
+create policy "orders_buyer_insert"
+on public.orders
+for insert
+to authenticated
+with check (
+  auth.uid() = buyer_id
+);
 
-  if(currentUser){
-    const name=currentUser.user_metadata?.name || "Minha conta";
-    button.textContent=name.split(" ")[0];
+-- ============================================================
+-- ITENS DOS PEDIDOS
+-- ============================================================
 
-    document.getElementById("accountName").textContent=name;
-    document.getElementById("accountEmail").textContent=currentUser.email || "";
-  }else{
-    button.textContent="Entrar";
-  }
-}
+create policy "order_items_buyer_read"
+on public.order_items
+for select
+to authenticated
+using (
+  exists (
+    select 1
+    from public.orders
+    where orders.id = order_items.order_id
+    and orders.buyer_id = auth.uid()
+  )
+);
 
-function openAccount(){
-  if(!currentUser){
-    openAuth();
-    return;
-  }
+create policy "order_items_seller_read"
+on public.order_items
+for select
+to authenticated
+using (
+  seller_id = auth.uid()
+);
 
-  updateAccountUI();
-  openModal("accountModal");
-}
+-- ============================================================
+-- SUPORTE
+-- ============================================================
 
-/* ==============================
-   PEDIDOS
-================================ */
+create policy "tickets_own_read"
+on public.support_tickets
+for select
+to authenticated
+using (
+  auth.uid() = user_id
+);
 
-function openOrders(){
-  const orders=JSON.parse(localStorage.getItem("rocketOrders") || "[]");
-  const list=document.getElementById("ordersList");
+create policy "tickets_own_insert"
+on public.support_tickets
+for insert
+to authenticated
+with check (
+  auth.uid() = user_id
+);
 
-  if(!orders.length){
-    list.innerHTML=`
-      <div class="account-box">
-        <strong>Nenhum pedido</strong>
-        <p>Seus pedidos aparecerão aqui.</p>
-      </div>
-    `;
-  }else{
-    list.innerHTML=orders.map(o=>`
-      <div class="order">
-        <div class="order-top">
-          <strong>${o.number}</strong>
-          <strong>${money(o.total)}</strong>
-        </div>
-        <p>${o.date}</p>
-        <p>${o.products.join(", ")}</p>
-        <p style="color:#ff6979">${o.status}</p>
-      </div>
-    `).join("");
-  }
+-- ============================================================
+-- REEMBOLSOS
+-- ============================================================
 
-  openModal("ordersModal");
-}
+create policy "refund_own_read"
+on public.refund_requests
+for select
+to authenticated
+using (
+  auth.uid() = user_id
+);
 
-/* ==============================
-   SUPORTE
-================================ */
+create policy "refund_own_insert"
+on public.refund_requests
+for insert
+to authenticated
+with check (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from public.orders
+    where orders.id = refund_requests.order_id
+    and orders.buyer_id = auth.uid()
+  )
+);
 
-function openSupport(){
-  openModal("supportModal");
-}
+-- ============================================================
+-- ÍNDICES
+-- ============================================================
 
-function sendSupport(){
-  const subject=document.getElementById("supportSubject").value.trim();
-  const message=document.getElementById("supportMessage").value.trim();
+create index if not exists products_game_idx
+on public.products(game);
 
-  if(!subject || !message){
-    toast("Preencha o assunto e a mensagem.");
-    return;
-  }
+create index if not exists products_seller_idx
+on public.products(seller_id);
 
-  toast("Abrindo o suporte da Rocket Store...");
-  setTimeout(()=>{
-    window.open("https://discord.gg/ZQaNeEpmt","_blank");
-  },600);
-}
+create index if not exists products_status_idx
+on public.products(status);
 
-/* ==============================
-   REEMBOLSO
-================================ */
+create index if not exists orders_buyer_idx
+on public.orders(buyer_id);
 
-function openRefund(){
-  openModal("refundModal");
-}
+create index if not exists order_items_order_idx
+on public.order_items(order_id);
 
-function requestRefund(){
-  const order=document.getElementById("refundOrder").value.trim();
-  const reason=document.getElementById("refundReason").value.trim();
+create index if not exists order_items_seller_idx
+on public.order_items(seller_id);
 
-  if(!order || !reason){
-    toast("Informe o pedido e o motivo.");
-    return;
-  }
+create index if not exists support_user_idx
+on public.support_tickets(user_id);
 
-  localStorage.setItem(
-    "rocketRefund",
-    JSON.stringify({
-      order,
-      reason,
-      date:new Date().toLocaleString("pt-BR"),
-      status:"Solicitação criada"
-    })
-  );
-
-  closeModal("refundModal");
-  toast("Solicitação registrada. Continue pelo suporte.");
-
-  setTimeout(()=>{
-    window.open("https://discord.gg/ZQaNeEpmt","_blank");
-  },800);
-}
-
-/* ==============================
-   INTERFACE
-================================ */
-
-function openModal(id){
-  document.getElementById(id).classList.add("show");
-}
-
-function closeModal(id){
-  document.getElementById(id).classList.remove("show");
-}
-
-function toast(text){
-  const el=document.getElementById("toast");
-  el.textContent=text;
-  el.classList.add("show");
-
-  clearTimeout(window.toastTimer);
-  window.toastTimer=setTimeout(()=>{
-    el.classList.remove("show");
-  },3500);
-}
-
-document.querySelectorAll(".overlay").forEach(overlay=>{
-  overlay.addEventListener("click",e=>{
-    if(e.target===overlay) overlay.classList.remove("show");
-  });
-});
-
-/* ==============================
-   INICIAR SITE
-================================ */
-
-async function init(){
-  renderProducts();
-  saveCart();
-
-  const {data}=await rocketSupabase.auth.getSession();
-
-  currentUser=data.session?.user || null;
-  updateAccountUI();
-
-  rocketSupabase.auth.onAuthStateChange((_event,session)=>{
-    currentUser=session?.user || null;
-    updateAccountUI();
-  });
-}
-
-init();
-</script>
-
-</body>
-</html>
+create index if not exists refund_user_idx
+on public.refund_requests(user_id);
