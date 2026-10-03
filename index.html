@@ -3,437 +3,210 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Rocket Store | Marketplace Gamer</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+:root{
+  --red:#ef1825;
+  --red2:#a90812;
+  --bg:#060607;
+  --card:#101012;
+  --card2:#151518;
+  --line:#242428;
+  --text:#f7f7f8;
+  --muted:#96969e;
 }
-
-html{
-    scroll-behavior:smooth;
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
 body{
-    font-family:Arial, Helvetica, sans-serif;
-    background:#070707;
-    color:#fff;
+  font-family:Inter,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
-
-/* HEADER */
+button,input{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
 
 header{
-    position:sticky;
-    top:0;
-    z-index:1000;
-    background:rgba(8,8,8,.96);
-    border-bottom:1px solid #222;
-    backdrop-filter:blur(15px);
+  position:sticky;top:0;z-index:50;
+  background:rgba(6,6,7,.93);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);
 }
-
 .nav{
-    max-width:1250px;
-    margin:auto;
-    height:75px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 25px;
+  max-width:1250px;margin:auto;height:72px;padding:0 22px;
+  display:flex;align-items:center;gap:28px;
 }
-
-.logo{
-    font-size:24px;
-    font-weight:900;
-    letter-spacing:1px;
+.logo{font-size:21px;font-weight:900;white-space:nowrap}
+.logo span{color:var(--red)}
+nav{display:flex;gap:22px;flex:1}
+nav a{color:var(--muted);font-size:14px}
+nav a:hover{color:white}
+.actions{display:flex;gap:9px}
+.btn{
+  border:1px solid var(--line);background:#111;color:white;
+  padding:10px 15px;border-radius:9px;font-weight:700;
 }
-
-.logo span{
-    color:#ff1e1e;
+.btn:hover{border-color:#555}
+.btn-red{background:var(--red);border-color:var(--red)}
+.btn-red:hover{background:#ff2632}
+.cart-count{
+  background:white;color:#111;border-radius:20px;
+  padding:1px 6px;margin-left:4px;font-size:11px;
 }
-
-.menu{
-    display:flex;
-    gap:30px;
-}
-
-.menu a{
-    color:#aaa;
-    text-decoration:none;
-    font-size:14px;
-    transition:.25s;
-}
-
-.menu a:hover{
-    color:#fff;
-}
-
-.discord{
-    background:#e50914;
-    color:white;
-    padding:11px 20px;
-    border-radius:8px;
-    text-decoration:none;
-    font-weight:bold;
-    transition:.25s;
-}
-
-.discord:hover{
-    background:#ff2530;
-    box-shadow:0 0 25px rgba(255,0,0,.35);
-}
-
-/* HERO */
 
 .hero{
-    min-height:560px;
-    display:flex;
-    align-items:center;
-    background:
-        radial-gradient(circle at 75% 40%, rgba(255,0,0,.20), transparent 35%),
-        linear-gradient(135deg,#090909,#050505);
+  min-height:520px;
+  background:
+    radial-gradient(circle at 75% 35%,rgba(239,24,37,.22),transparent 30%),
+    radial-gradient(circle at 15% 80%,rgba(239,24,37,.08),transparent 25%);
+  display:flex;align-items:center;
 }
-
-.hero-content{
-    max-width:1250px;
-    width:100%;
-    margin:auto;
-    padding:70px 25px;
+.wrap{max-width:1250px;margin:auto;padding:70px 22px;width:100%}
+.pill{
+  display:inline-block;background:#2a0d10;color:#ff6570;
+  border:1px solid #50171b;border-radius:30px;padding:7px 12px;
+  font-size:12px;font-weight:800;margin-bottom:18px;
 }
+.hero h1{font-size:64px;line-height:1.02;max-width:800px}
+.hero h1 span{color:var(--red)}
+.hero p{max-width:590px;color:var(--muted);line-height:1.7;margin:20px 0 28px}
+.hero-buttons{display:flex;gap:10px;flex-wrap:wrap}
 
-.badge{
-    display:inline-block;
-    color:#ff3434;
-    background:rgba(255,0,0,.1);
-    border:1px solid rgba(255,0,0,.25);
-    padding:8px 13px;
-    border-radius:100px;
-    font-size:12px;
-    font-weight:bold;
-    margin-bottom:20px;
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;margin-top:50px;max-width:650px;
 }
+.stat{border-left:2px solid var(--red);padding-left:15px}
+.stat strong{display:block;font-size:21px}
+.stat small{color:var(--muted)}
 
-.hero h1{
-    font-size:64px;
-    max-width:750px;
-    line-height:1.05;
+.section{max-width:1250px;margin:auto;padding:65px 22px}
+.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:25px}
+.section-head h2{font-size:30px}
+.section-head p{color:var(--muted);margin-top:6px}
+
+.search-area{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap}
+.search{
+  flex:1;min-width:230px;background:#101012;border:1px solid var(--line);
+  border-radius:10px;color:white;padding:13px 15px;outline:none;
 }
-
-.hero h1 span{
-    color:#ef1b25;
+.search:focus{border-color:var(--red)}
+.filters{display:flex;gap:7px;flex-wrap:wrap}
+.filter{
+  background:#111;border:1px solid var(--line);color:#aaa;
+  border-radius:9px;padding:10px 13px;
 }
+.filter.active,.filter:hover{background:#261013;color:white;border-color:#6b1a20}
 
-.hero p{
-    color:#999;
-    max-width:600px;
-    line-height:1.7;
-    margin:22px 0 30px;
-}
-
-.hero-buttons{
-    display:flex;
-    gap:12px;
-}
-
-.btn-primary,
-.btn-secondary{
-    display:inline-block;
-    padding:14px 23px;
-    border-radius:8px;
-    text-decoration:none;
-    font-weight:bold;
-}
-
-.btn-primary{
-    background:#e50914;
-    color:#fff;
-}
-
-.btn-primary:hover{
-    background:#ff1f2b;
-}
-
-.btn-secondary{
-    border:1px solid #333;
-    color:#fff;
-    background:#111;
-}
-
-/* CONTAINER */
-
-.container{
-    max-width:1250px;
-    margin:auto;
-    padding:70px 25px;
-}
-
-.section-title{
-    display:flex;
-    justify-content:space-between;
-    align-items:end;
-    margin-bottom:30px;
-}
-
-.section-title h2{
-    font-size:30px;
-}
-
-.section-title p{
-    color:#777;
-    margin-top:7px;
-}
-
-/* CATEGORIES */
-
-.categories{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
-}
-
-.category{
-    background:#0e0e0e;
-    border:1px solid #1e1e1e;
-    padding:25px;
-    border-radius:12px;
-    transition:.25s;
-}
-
-.category:hover{
-    border-color:#c71921;
-    transform:translateY(-4px);
-}
-
-.category-icon{
-    font-size:28px;
-    margin-bottom:15px;
-}
-
-.category h3{
-    margin-bottom:8px;
-}
-
-.category p{
-    color:#777;
-    font-size:13px;
-}
-
-/* PRODUCTS */
-
-.products{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
-}
-
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .product{
-    background:#0e0e0e;
-    border:1px solid #1d1d1d;
-    border-radius:14px;
-    overflow:hidden;
-    transition:.25s;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:15px;overflow:hidden;transition:.22s;
 }
-
-.product:hover{
-    transform:translateY(-5px);
-    border-color:#8d151a;
+.product:hover{transform:translateY(-4px);border-color:#6b1c22}
+.product-top{
+  height:145px;display:flex;align-items:center;justify-content:center;
+  font-size:53px;
+  background:radial-gradient(circle,rgba(239,24,37,.18),transparent 60%),#0c0c0e;
+  position:relative;
 }
-
-.product-image{
-    height:170px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:60px;
-    background:
-        radial-gradient(circle,rgba(255,0,0,.20),transparent 60%),
-        #101010;
+.heart{
+  position:absolute;right:12px;top:12px;width:34px;height:34px;
+  border-radius:50%;border:1px solid #333;background:#111;color:white;
 }
+.heart.on{color:#ff3b47;border-color:#7d2027}
+.product-body{padding:18px}
+.tag{font-size:10px;color:#ff5a65;font-weight:900;text-transform:uppercase}
+.product h3{margin:7px 0;font-size:17px}
+.desc{color:var(--muted);font-size:12px;line-height:1.45;height:35px}
+.price{font-size:22px;font-weight:900;margin:16px 0}
+.buy{width:100%;padding:11px;border:0;border-radius:8px;background:var(--red);color:white;font-weight:800}
+.buy:hover{background:#ff2935}
 
-.product-info{
-    padding:20px;
+.support{
+  background:linear-gradient(135deg,#10090a,#0a0a0b);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
 }
-
-.product-tag{
-    color:#ff3434;
-    font-size:11px;
-    font-weight:bold;
-    text-transform:uppercase;
+.support-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.support-card{
+  background:#101012;border:1px solid var(--line);
+  padding:25px;border-radius:13px;
 }
-
-.product h3{
-    margin:8px 0;
-}
-
-.product-description{
-    color:#777;
-    font-size:13px;
-    min-height:35px;
-}
-
-.price{
-    margin:20px 0 15px;
-    font-size:24px;
-    font-weight:bold;
-}
-
-.price small{
-    font-size:12px;
-    color:#777;
-}
-
-.buy{
-    width:100%;
-    border:0;
-    padding:12px;
-    background:#e50914;
-    color:white;
-    border-radius:7px;
-    cursor:pointer;
-    font-weight:bold;
-    transition:.2s;
-}
-
-.buy:hover{
-    background:#ff222d;
-}
-
-/* TRUST */
-
-.trust{
-    background:#0b0b0b;
-    border-top:1px solid #181818;
-    border-bottom:1px solid #181818;
-}
-
-.trust-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:30px;
-}
-
-.trust-card{
-    text-align:center;
-    padding:25px;
-}
-
-.trust-card span{
-    font-size:35px;
-}
-
-.trust-card h3{
-    margin:15px 0 8px;
-}
-
-.trust-card p{
-    color:#777;
-    font-size:14px;
-    line-height:1.5;
-}
-
-/* REVIEWS */
-
-.reviews{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px;
-}
-
-.review{
-    padding:25px;
-    background:#0e0e0e;
-    border:1px solid #1d1d1d;
-    border-radius:12px;
-}
-
-.stars{
-    color:#ff3030;
-    margin-bottom:15px;
-}
-
-.review p{
-    color:#aaa;
-    line-height:1.6;
-    font-size:14px;
-}
-
-.review strong{
-    display:block;
-    margin-top:18px;
-}
-
-/* CTA */
-
-.cta{
-    margin-top:70px;
-    padding:60px 25px;
-    text-align:center;
-    border:1px solid #301214;
-    border-radius:18px;
-    background:
-        radial-gradient(circle at center,rgba(255,0,0,.15),transparent 60%),
-        #0c0c0c;
-}
-
-.cta h2{
-    font-size:35px;
-}
-
-.cta p{
-    color:#888;
-    margin:15px 0 25px;
-}
-
-/* FOOTER */
+.support-card b{display:block;margin:12px 0 7px}
+.support-card p{color:var(--muted);font-size:13px;line-height:1.5}
 
 footer{
-    border-top:1px solid #1c1c1c;
-    padding:35px 20px;
-    text-align:center;
-    color:#555;
-    font-size:13px;
+  border-top:1px solid var(--line);color:#696970;
+  text-align:center;padding:35px 20px;font-size:12px;
 }
 
-/* MOBILE */
+/* MODAIS */
+.overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);
+  z-index:100;align-items:center;justify-content:center;padding:18px;
+}
+.overlay.show{display:flex}
+.modal{
+  width:min(500px,100%);max-height:90vh;overflow:auto;
+  background:#0e0e10;border:1px solid #29292d;border-radius:17px;padding:25px;
+  box-shadow:0 25px 80px #000;
+}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.close{background:none;border:0;color:#888;font-size:25px}
+.field{margin:12px 0}
+.field label{display:block;font-size:12px;color:#aaa;margin-bottom:6px}
+.field input{
+  width:100%;padding:13px;border-radius:9px;border:1px solid #29292d;
+  background:#09090a;color:white;outline:none;
+}
+.field input:focus{border-color:var(--red)}
+.full{width:100%;margin-top:10px}
+
+.tabs{display:flex;background:#09090a;border-radius:9px;padding:4px;margin-bottom:18px}
+.tab{flex:1;border:0;background:transparent;color:#777;padding:9px;border-radius:7px}
+.tab.active{background:#1b1b1e;color:white}
+
+.cart-item{
+  display:flex;justify-content:space-between;gap:12px;
+  border-bottom:1px solid #222;padding:13px 0;
+}
+.cart-item small{color:#888}
+.remove{border:0;background:none;color:#ff5360}
+.total{display:flex;justify-content:space-between;font-size:20px;font-weight:900;padding:20px 0}
+
+.pix-box{
+  text-align:center;background:#09090a;border:1px solid #29292d;
+  padding:20px;border-radius:12px;margin:15px 0;
+}
+.qr{
+  width:150px;height:150px;margin:15px auto;background:white;color:#111;
+  display:flex;align-items:center;justify-content:center;font-weight:bold;
+}
+.notice{
+  color:#b0b0b6;font-size:12px;line-height:1.5;
+  padding:12px;background:#151518;border-radius:8px;margin-top:12px;
+}
+
+.toast{
+  position:fixed;right:20px;bottom:20px;background:#17171a;border:1px solid #333;
+  padding:13px 18px;border-radius:10px;z-index:200;
+  transform:translateY(100px);opacity:0;transition:.25s;
+}
+.toast.show{transform:none;opacity:1}
 
 @media(max-width:900px){
-
-    .menu{
-        display:none;
-    }
-
-    .hero h1{
-        font-size:45px;
-    }
-
-    .categories,
-    .products{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .trust-grid,
-    .reviews{
-        grid-template-columns:1fr;
-    }
+  nav{display:none}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .support-grid{grid-template-columns:1fr}
+  .hero h1{font-size:46px}
 }
-
-@media(max-width:550px){
-
-    .hero h1{
-        font-size:38px;
-    }
-
-    .categories,
-    .products{
-        grid-template-columns:1fr;
-    }
-
-    .discord{
-        padding:9px 12px;
-        font-size:12px;
-    }
+@media(max-width:540px){
+  .logo{font-size:17px}
+  .actions .login-text{display:none}
+  .hero h1{font-size:38px}
+  .grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -441,297 +214,355 @@ footer{
 <body>
 
 <header>
-    <div class="nav">
+  <div class="nav">
+    <div class="logo">🚀 ROCKET <span>STORE</span></div>
 
-        <div class="logo">
-            🚀 ROCKET <span>STORE</span>
-        </div>
+    <nav>
+      <a href="#home">Início</a>
+      <a href="#explorar">Explorar</a>
+      <a href="#suporte">Suporte</a>
+      <a href="#" onclick="openOrders()">Meus pedidos</a>
+    </nav>
 
-        <nav class="menu">
-            <a href="#inicio">Início</a>
-            <a href="#categorias">Categorias</a>
-            <a href="#produtos">Produtos</a>
-            <a href="#avaliacoes">Avaliações</a>
-        </nav>
-
-        <a href="#" class="discord">Discord</a>
-
+    <div class="actions">
+      <button class="btn" onclick="openLogin()">👤 <span class="login-text">Entrar</span></button>
+      <button class="btn btn-red" onclick="openCart()">🛒 <span id="cartCount" class="cart-count">0</span></button>
     </div>
+  </div>
 </header>
 
-<section class="hero" id="inicio">
+<section class="hero" id="home">
+  <div class="wrap">
+    <span class="pill">🔥 ROCKET MARKETPLACE</span>
+    <h1>O seu universo gamer em <span>um só lugar.</span></h1>
+    <p>Explore produtos digitais, ofertas e serviços em uma experiência rápida, moderna e feita para gamers.</p>
 
-    <div class="hero-content">
-
-        <div class="badge">
-            🔥 ROCKET STORE
-        </div>
-
-        <h1>
-            Seu novo <span>marketplace gamer.</span>
-        </h1>
-
-        <p>
-            Encontre produtos e serviços digitais em uma plataforma
-            moderna, rápida e organizada.
-        </p>
-
-        <div class="hero-buttons">
-
-            <a href="#produtos" class="btn-primary">
-                Ver produtos
-            </a>
-
-            <a href="#categorias" class="btn-secondary">
-                Explorar categorias
-            </a>
-
-        </div>
-
+    <div class="hero-buttons">
+      <a class="btn btn-red" href="#explorar">Explorar produtos</a>
+      <a class="btn" href="https://discord.gg/ZQaNeEpmt" target="_blank">Entrar no Discord</a>
     </div>
 
+    <div class="stats">
+      <div class="stat"><strong>24/7</strong><small>Suporte via Discord</small></div>
+      <div class="stat"><strong>Rápido</strong><small>Atendimento digital</small></div>
+      <div class="stat"><strong>Seguro</strong><small>Checkout organizado</small></div>
+    </div>
+  </div>
 </section>
 
-<section class="container" id="categorias">
-
-    <div class="section-title">
-
-        <div>
-            <h2>Categorias</h2>
-            <p>Encontre rapidamente o que procura.</p>
-        </div>
-
+<section class="section" id="explorar">
+  <div class="section-head">
+    <div>
+      <h2>Explorar</h2>
+      <p>Encontre seu próximo produto.</p>
     </div>
+  </div>
 
-    <div class="categories">
-
-        <div class="category">
-            <div class="category-icon">💎</div>
-            <h3>Discord</h3>
-            <p>Produtos e serviços para sua comunidade.</p>
-        </div>
-
-        <div class="category">
-            <div class="category-icon">🎮</div>
-            <h3>Games</h3>
-            <p>Produtos relacionados aos seus jogos favoritos.</p>
-        </div>
-
-        <div class="category">
-            <div class="category-icon">🎁</div>
-            <h3>Gift Cards</h3>
-            <p>Créditos e cartões digitais.</p>
-        </div>
-
-        <div class="category">
-            <div class="category-icon">⚡</div>
-            <h3>Serviços</h3>
-            <p>Serviços digitais selecionados.</p>
-        </div>
-
+  <div class="search-area">
+    <input id="search" class="search" placeholder="🔎 Pesquisar produtos..." oninput="renderProducts()">
+    <div class="filters">
+      <button class="filter active" onclick="filterBy('Todos',this)">Todos</button>
+      <button class="filter" onclick="filterBy('Fortnite',this)">Fortnite</button>
+      <button class="filter" onclick="filterBy('Roblox',this)">Roblox</button>
+      <button class="filter" onclick="filterBy('Minecraft',this)">Minecraft</button>
+      <button class="filter" onclick="filterBy('Outros',this)">Outros</button>
     </div>
+  </div>
 
+  <div class="grid" id="products"></div>
 </section>
 
-<section class="container" id="produtos">
-
-    <div class="section-title">
-
-        <div>
-            <h2>Produtos em destaque</h2>
-            <p>Confira alguns dos destaques da Rocket Store.</p>
-        </div>
-
+<section class="support" id="suporte">
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <h2>Central de suporte</h2>
+        <p>Precisa de ajuda? Estamos aqui.</p>
+      </div>
     </div>
 
-    <div class="products">
+    <div class="support-grid">
+      <div class="support-card">
+        <span>🎫</span>
+        <b>Abrir atendimento</b>
+        <p>Entre em nosso Discord e abra um ticket com a equipe.</p><br>
+        <a class="btn btn-red" target="_blank" href="https://discord.gg/ZQaNeEpmt">Abrir suporte</a>
+      </div>
 
-        <div class="product">
+      <div class="support-card">
+        <span>📦</span>
+        <b>Meus pedidos</b>
+        <p>Consulte os pedidos salvos neste dispositivo.</p><br>
+        <button class="btn" onclick="openOrders()">Consultar</button>
+      </div>
 
-            <div class="product-image">💎</div>
-
-            <div class="product-info">
-
-                <span class="product-tag">Discord</span>
-
-                <h3>Produto Premium</h3>
-
-                <p class="product-description">
-                    Produto digital com entrega rápida.
-                </p>
-
-                <div class="price">
-                    R$ 19,90
-                </div>
-
-                <button class="buy">
-                    Comprar agora
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="product">
-
-            <div class="product-image">🎮</div>
-
-            <div class="product-info">
-
-                <span class="product-tag">Games</span>
-
-                <h3>Game Pack</h3>
-
-                <p class="product-description">
-                    Conteúdo digital para jogadores.
-                </p>
-
-                <div class="price">
-                    R$ 29,90
-                </div>
-
-                <button class="buy">
-                    Comprar agora
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="product">
-
-            <div class="product-image">🎁</div>
-
-            <div class="product-info">
-
-                <span class="product-tag">Gift Card</span>
-
-                <h3>Gift Card</h3>
-
-                <p class="product-description">
-                    Crédito digital disponível na loja.
-                </p>
-
-                <div class="price">
-                    R$ 49,90
-                </div>
-
-                <button class="buy">
-                    Comprar agora
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="product">
-
-            <div class="product-image">⚡</div>
-
-            <div class="product-info">
-
-                <span class="product-tag">Serviço</span>
-
-                <h3>Rocket Service</h3>
-
-                <p class="product-description">
-                    Serviço digital com suporte.
-                </p>
-
-                <div class="price">
-                    R$ 14,90
-                </div>
-
-                <button class="buy">
-                    Comprar agora
-                </button>
-
-            </div>
-
-        </div>
-
+      <div class="support-card">
+        <span>🛡️</span>
+        <b>Compra responsável</b>
+        <p>Confira sempre a descrição, disponibilidade e regras do produto antes da compra.</p>
+      </div>
     </div>
-
+  </div>
 </section>
 
-<section class="trust">
+<footer>© 2026 Rocket Store • Marketplace Gamer</footer>
 
-    <div class="container trust-grid">
+<!-- LOGIN -->
+<div class="overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-head"><h2>Minha conta</h2><button class="close" onclick="closeModal('loginModal')">×</button></div>
 
-        <div class="trust-card">
-            <span>⚡</span>
-            <h3>Entrega rápida</h3>
-            <p>Processo simples para você receber seu produto.</p>
-        </div>
-
-        <div class="trust-card">
-            <span>🛡️</span>
-            <h3>Compra segura</h3>
-            <p>Atendimento e transparência durante sua compra.</p>
-        </div>
-
-        <div class="trust-card">
-            <span>🎧</span>
-            <h3>Suporte</h3>
-            <p>Entre em contato com nossa equipe quando precisar.</p>
-        </div>
-
+    <div class="tabs">
+      <button id="loginTab" class="tab active" onclick="authTab('login')">Entrar</button>
+      <button id="createTab" class="tab" onclick="authTab('create')">Criar conta</button>
     </div>
 
-</section>
-
-<section class="container" id="avaliacoes">
-
-    <div class="section-title">
-
-        <div>
-            <h2>Avaliações</h2>
-            <p>Veja o que nossos clientes dizem.</p>
-        </div>
-
+    <div class="field">
+      <label>E-mail</label>
+      <input type="email" placeholder="seuemail@email.com">
     </div>
 
-    <div class="reviews">
-
-        <div class="review">
-            <div class="stars">★★★★★</div>
-            <p>Atendimento rápido e processo muito simples.</p>
-            <strong>Cliente Rocket</strong>
-        </div>
-
-        <div class="review">
-            <div class="stars">★★★★★</div>
-            <p>Site organizado e fácil de encontrar os produtos.</p>
-            <strong>Cliente Rocket</strong>
-        </div>
-
-        <div class="review">
-            <div class="stars">★★★★★</div>
-            <p>Gostei bastante da experiência e do suporte.</p>
-            <strong>Cliente Rocket</strong>
-        </div>
-
+    <div class="field">
+      <label>Senha</label>
+      <input type="password" placeholder="••••••••">
     </div>
 
-    <div class="cta">
-
-        <h2>Pronto para decolar? 🚀</h2>
-
-        <p>
-            Explore a Rocket Store e encontre seu próximo produto.
-        </p>
-
-        <a href="#produtos" class="btn-primary">
-            Explorar produtos
-        </a>
-
+    <div class="field" id="nameField" style="display:none">
+      <label>Nome de usuário</label>
+      <input placeholder="Seu nome">
     </div>
 
-</section>
+    <button class="btn btn-red full" onclick="demoLogin()">Continuar</button>
 
-<footer>
-    © 2026 Rocket Store • Todos os direitos reservados.
-</footer>
+    <div class="notice">
+      Demonstração visual. Para contas reais, o site precisará ser conectado a um serviço seguro de autenticação.
+    </div>
+  </div>
+</div>
+
+<!-- CARRINHO -->
+<div class="overlay" id="cartModal">
+  <div class="modal">
+    <div class="modal-head"><h2>🛒 Seu carrinho</h2><button class="close" onclick="closeModal('cartModal')">×</button></div>
+    <div id="cartItems"></div>
+    <div class="total"><span>Total</span><span id="total">R$ 0,00</span></div>
+    <button class="btn btn-red full" onclick="checkout()">Ir para checkout</button>
+  </div>
+</div>
+
+<!-- CHECKOUT -->
+<div class="overlay" id="checkoutModal">
+  <div class="modal">
+    <div class="modal-head"><h2>Checkout</h2><button class="close" onclick="closeModal('checkoutModal')">×</button></div>
+
+    <div class="field">
+      <label>Nome</label>
+      <input id="customerName" placeholder="Seu nome">
+    </div>
+
+    <div class="field">
+      <label>E-mail</label>
+      <input id="customerEmail" type="email" placeholder="seuemail@email.com">
+    </div>
+
+    <div class="total"><span>Total do pedido</span><span id="checkoutTotal">R$ 0,00</span></div>
+
+    <div class="pix-box">
+      <b>💠 Pagamento via PIX</b>
+      <div class="qr">QR CODE<br>DEMO</div>
+      <p style="color:#888;font-size:12px">A cobrança PIX real será gerada pelo provedor de pagamentos quando a integração estiver configurada.</p>
+    </div>
+
+    <button class="btn btn-red full" onclick="createOrder()">Criar pedido</button>
+
+    <div class="notice">
+      ⚠️ Não envie dinheiro usando dados inseridos manualmente neste código. A confirmação automática de PIX exige integração segura com um provedor de pagamento.
+    </div>
+  </div>
+</div>
+
+<!-- PEDIDOS -->
+<div class="overlay" id="ordersModal">
+  <div class="modal">
+    <div class="modal-head"><h2>📦 Meus pedidos</h2><button class="close" onclick="closeModal('ordersModal')">×</button></div>
+    <div id="ordersList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const products = [
+  {id:1,name:"Fortnite Starter",game:"Fortnite",icon:"🔥",price:19.90,desc:"Opção inicial para jogadores de Fortnite."},
+  {id:2,name:"Fortnite Plus",game:"Fortnite",icon:"👑",price:34.90,desc:"Pacote gamer intermediário."},
+  {id:3,name:"Roblox Starter",game:"Roblox",icon:"🟦",price:14.90,desc:"Produto digital para Roblox."},
+  {id:4,name:"Blox Fruits Pack",game:"Roblox",icon:"⚔️",price:24.90,desc:"Pacote para fãs de Blox Fruits."},
+  {id:5,name:"Minecraft Pack",game:"Minecraft",icon:"🟩",price:29.90,desc:"Produto digital Minecraft."},
+  {id:6,name:"Brawl Stars Pack",game:"Outros",icon:"⭐",price:19.90,desc:"Produto gamer Brawl Stars."},
+  {id:7,name:"Rocket League Pack",game:"Outros",icon:"🏎️",price:24.90,desc:"Pacote Rocket League."},
+  {id:8,name:"Valorant Pack",game:"Outros",icon:"🔫",price:29.90,desc:"Produto digital Valorant."},
+  {id:9,name:"Free Fire Pack",game:"Outros",icon:"💥",price:19.90,desc:"Pacote gamer Free Fire."},
+  {id:10,name:"Discord Pack",game:"Outros",icon:"💎",price:14.90,desc:"Produto digital para Discord."}
+];
+
+let currentFilter="Todos";
+let cart=JSON.parse(localStorage.getItem("rocketCart")||"[]");
+let favorites=JSON.parse(localStorage.getItem("rocketFav")||"[]");
+
+function money(v){
+  return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+function renderProducts(){
+  const q=document.getElementById("search").value.toLowerCase();
+  const filtered=products.filter(p =>
+    (currentFilter==="Todos" || p.game===currentFilter) &&
+    (p.name.toLowerCase().includes(q) || p.game.toLowerCase().includes(q))
+  );
+
+  document.getElementById("products").innerHTML=filtered.map(p=>`
+    <article class="product">
+      <div class="product-top">
+        ${p.icon}
+        <button class="heart ${favorites.includes(p.id)?"on":""}" onclick="favorite(${p.id})">♥</button>
+      </div>
+      <div class="product-body">
+        <span class="tag">${p.game}</span>
+        <h3>${p.name}</h3>
+        <p class="desc">${p.desc}</p>
+        <div class="price">${money(p.price)}</div>
+        <button class="buy" onclick="addCart(${p.id})">Adicionar ao carrinho</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function filterBy(cat,btn){
+  currentFilter=cat;
+  document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active");
+  renderProducts();
+}
+
+function favorite(id){
+  favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];
+  localStorage.setItem("rocketFav",JSON.stringify(favorites));
+  renderProducts();
+}
+
+function addCart(id){
+  const item=cart.find(x=>x.id===id);
+  if(item)item.qty++;
+  else cart.push({id,qty:1});
+  saveCart();
+  toast("Produto adicionado ao carrinho 🚀");
+}
+
+function saveCart(){
+  localStorage.setItem("rocketCart",JSON.stringify(cart));
+  document.getElementById("cartCount").textContent=cart.reduce((a,b)=>a+b.qty,0);
+  renderCart();
+}
+
+function renderCart(){
+  const box=document.getElementById("cartItems");
+  if(!cart.length){
+    box.innerHTML="<p style='color:#888'>Seu carrinho está vazio.</p>";
+  }else{
+    box.innerHTML=cart.map(item=>{
+      const p=products.find(x=>x.id===item.id);
+      return `<div class="cart-item">
+        <div><b>${p.icon} ${p.name}</b><br><small>${item.qty} × ${money(p.price)}</small></div>
+        <button class="remove" onclick="removeCart(${p.id})">Remover</button>
+      </div>`;
+    }).join("");
+  }
+  document.getElementById("total").textContent=money(cartTotal());
+}
+
+function removeCart(id){
+  cart=cart.filter(x=>x.id!==id);
+  saveCart();
+}
+
+function cartTotal(){
+  return cart.reduce((sum,item)=>{
+    const p=products.find(x=>x.id===item.id);
+    return sum+p.price*item.qty;
+  },0);
+}
+
+function openCart(){renderCart();openModal("cartModal")}
+function openLogin(){openModal("loginModal")}
+
+function checkout(){
+  if(!cart.length){toast("Seu carrinho está vazio.");return}
+  closeModal("cartModal");
+  document.getElementById("checkoutTotal").textContent=money(cartTotal());
+  openModal("checkoutModal");
+}
+
+function createOrder(){
+  const name=document.getElementById("customerName").value.trim();
+  if(!name){toast("Digite seu nome.");return}
+
+  const orders=JSON.parse(localStorage.getItem("rocketOrders")||"[]");
+  const order={
+    number:"RS"+Date.now().toString().slice(-6),
+    total:cartTotal(),
+    status:"Aguardando pagamento",
+    date:new Date().toLocaleString("pt-BR")
+  };
+
+  orders.unshift(order);
+  localStorage.setItem("rocketOrders",JSON.stringify(orders));
+  cart=[];
+  saveCart();
+  closeModal("checkoutModal");
+  toast("Pedido criado! Abra o Discord para continuar.");
+  setTimeout(()=>window.open("https://discord.gg/ZQaNeEpmt","_blank"),800);
+}
+
+function openOrders(){
+  const orders=JSON.parse(localStorage.getItem("rocketOrders")||"[]");
+  document.getElementById("ordersList").innerHTML=orders.length?
+    orders.map(o=>`<div class="support-card" style="margin-bottom:10px">
+      <b>Pedido #${o.number}</b>
+      <p>${o.date}</p>
+      <p>Total: ${money(o.total)}</p>
+      <p style="color:#ffbf5a">● ${o.status}</p>
+    </div>`).join("")
+    :"<p style='color:#888'>Nenhum pedido encontrado neste dispositivo.</p>";
+  openModal("ordersModal");
+}
+
+function authTab(type){
+  document.getElementById("loginTab").classList.toggle("active",type==="login");
+  document.getElementById("createTab").classList.toggle("active",type==="create");
+  document.getElementById("nameField").style.display=type==="create"?"block":"none";
+}
+
+function demoLogin(){
+  toast("Login demonstrativo. A autenticação real será conectada depois.");
+  closeModal("loginModal");
+}
+
+function openModal(id){document.getElementById(id).classList.add("show")}
+function closeModal(id){document.getElementById(id).classList.remove("show")}
+
+function toast(text){
+  const t=document.getElementById("toast");
+  t.textContent=text;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2500);
+}
+
+document.querySelectorAll(".overlay").forEach(x=>{
+  x.addEventListener("click",e=>{if(e.target===x)x.classList.remove("show")});
+});
+
+renderProducts();
+saveCart();
+</script>
 
 </body>
 </html>
